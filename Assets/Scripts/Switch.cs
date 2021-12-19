@@ -1,31 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Switch : MonoBehaviour
 {
     public GameObject scriptObject;
+    public GameObject sphere;
 
-    Button button;
-    Mobius script;
+    Transport script;
+    RectTransform rectTransform;
     // Start is called before the first frame update
 
     public void Click()
     {
         script.transition = true;
-        button.enabled = false;
+        script.next = sphere;
     }
 
     void Start()
     {
-        script = scriptObject.GetComponent<Mobius>();
-        button = GetComponent<Button>();
+        script = scriptObject.GetComponent<Transport>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        rectTransform.localScale = (script.last == sphere || script.transition) ? Vector3.zero : new Vector3(50, 50, 50);
     }
 }
