@@ -4,43 +4,27 @@ using UnityEngine.EventSystems;
 
 public class clickevent : MonoBehaviour 
 {
-    public GameObject camera;
     public GameObject sphere;
-    private Transform cameraposi;
-    private Transform sphereposi;
-    private Vector3 derta;
-    private int time;
-    public bool select;
+    public GameObject scriptObject;
+
+    Transport script;
+    RectTransform rectTransform;
+    Vector3 position;
     public void OnSubmit()
     {
-        select = true;
-        time = 0;
+        script.transition = true;
+        script.next = sphere;
     }
     void Start()
     {
-        select = false;
-        cameraposi = camera.GetComponent<Transform>();
-        sphereposi = sphere.GetComponent<Transform>();
-        
+        script = scriptObject.GetComponent<Transport>();
+        rectTransform = GetComponent<RectTransform>();
+        position = rectTransform.localPosition;
     }
     void Update()
     {
-        if(select){
-            if(time == 0){
-                derta = sphereposi.position - cameraposi.position;
-                derta.y = 0f;
-            }
-            if(time < 200){
-                cameraposi.position += derta*0.005f;
-                time+=1;
-            }
-            else if(time == 200){
-                sphereposi.localScale = Vector3.zero;
-                select = false;
-            }
-        }
-        if(cameraposi.position.x!=sphereposi.position.x&&time!=200){
-            sphereposi.localScale = new Vector3(0.5f,0.5f,0.5f);
-        }
+        Vector3 cameraPosi = script.last.GetComponent<Transform>().localPosition;
+        rectTransform.localPosition = (position - cameraPosi).normalized * 5 + cameraPosi;
+        rectTransform.localScale = (script.last == sphere || script.transition) ? Vector3.zero : new Vector3(0.5f, 0.5f, 0.5f);
     }   
 }
